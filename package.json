@@ -17,5 +17,8 @@
     "url": "https://github.com/curveballdaniel/pokemon-team-organizer-site/issues"
   },
   "homepage": "https://github.com/curveballdaniel/pokemon-team-organizer-site#readme",
-  "dependencies": {}
+  "dependencies": {
+    "express": "^4.17.1",
+    "require": "^2.4.20"
+  }
 }
