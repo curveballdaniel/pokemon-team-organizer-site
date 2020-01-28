@@ -1,3 +1,8 @@
 steps:
+#install
+- name: 'gcr.io/cloud-builders/npm'
+  args: ['install']
+
+#deploy
 - name: 'gcr.io/cloud-builders/gcloud'
-  args: ['app', 'deploy', '--project=yboy-pokemon-app', '--version=$SHORT_SHA']
+  args: ['app', 'deploy']
