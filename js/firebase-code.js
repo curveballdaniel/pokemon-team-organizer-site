@@ -109,8 +109,10 @@ function writeUserTeamsToDatabase(){
     }
   }
 
-  // loading of teams is complete!
-  // alert();
+  // if the user didn't have any teams to save, the for loop is skipped. then, still tell the user that his teams have been saved - as they have (same as clearing).
+  if (thisUser.teams.length < 1) {
+    triggerSavedTeamsNotificationDiv();
+  }
 
 }
 
@@ -158,7 +160,7 @@ function obtainTeamsFromDatabase(){
 
         currentPokemon.stats = pokemonStats;
 
-        currentPokemon.shiny = pkmnChildNode.val().shiny; // need conversion from string to bool?
+        currentPokemon.shiny = pkmnChildNode.val().shiny;
 
         currentPokemon.nature = pkmnChildNode.val().nature;
         currentPokemon.level = pkmnChildNode.val().level;
