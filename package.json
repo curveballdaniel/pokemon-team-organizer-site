@@ -4,7 +4,9 @@
   "description": "\u0016Build and manage your pokemon teams, save them online and view extra stats, visuals, and more!",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node app.js",
+    "e2e": "repo-tools test deploy",
+    "test": "repo-tools test app",
   },
   "repository": {
     "type": "git",
