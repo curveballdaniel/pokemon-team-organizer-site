@@ -5,8 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "e2e": "repo-tools test deploy",
-    "test": "repo-tools test app"
+    "e2e": "repo-tools test deploy"
   },
   "repository": {
     "type": "git",
