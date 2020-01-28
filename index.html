@@ -1,0 +1,1187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <title>Team Organizer</title>
+  <!-- MDB icon -->
+  <link rel="icon" href="img/timer.png" type="image/x-icon">
+  
+  <!-- Bootstrap core CSS -->
+  <link rel="stylesheet" href="css/bootstrap.min.css">
+  
+  <!-- Material Design Bootstrap -->
+  <!-- <link rel="stylesheet" href="css/mdb.min.css"> -->
+
+  <!-- Bootstrap Dashboard specific css -->
+  <link rel="stylesheet" href="css/dashboard.css">
+
+  <!-- fontawesome -->
+  <script src="https://kit.fontawesome.com/b7cd29f18b.js" crossorigin="anonymous"></script>
+
+
+
+</head>
+
+<style>
+
+table.dataTable thead .sorting:after,
+table.dataTable thead .sorting:before,
+table.dataTable thead .sorting_asc:after,
+table.dataTable thead .sorting_asc:before,
+table.dataTable thead .sorting_asc_disabled:after,
+table.dataTable thead .sorting_asc_disabled:before,
+table.dataTable thead .sorting_desc:after,
+table.dataTable thead .sorting_desc:before,
+table.dataTable thead .sorting_desc_disabled:after,
+table.dataTable thead .sorting_desc_disabled:before {
+bottom: .5em;
+}
+
+/**********************************************************************/
+/* The Modal (background) */
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 999; /* Sit on top */
+  left: 15%;
+  top: 0;
+  width: 85%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* Modal Content/Box */
+.modal-content {
+  background-color: #f8f9fa;
+  margin: 15% auto; /* 15% from the top and centered */
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%; /* Could be more or less, depending on screen size */
+  z-index: 999; /* Sit on top */
+}
+
+/* css to surround fill-ins for add team */
+.bordered-info-selection {
+  border: 1px solid blue;
+  box-shadow: 3px 4px 6px rgba(0,0,0,0.4);
+  padding-top: 50px;
+  padding-bottom: 50px;
+}
+
+.bordered-pokemon-selection {
+  border: 1px solid red;
+  box-shadow: 3px 4px 6px rgba(0,0,0,0.4);
+  padding-top: 50px;
+  padding-bottom: 50px;
+}
+
+/* The Close Button */
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.invalid-input {
+  display: none;
+  color: red;
+}
+
+/********************************************/
+/* table css */
+
+.dataTables_length label {
+  white-space: nowrap;
+}
+
+.user-main-table {
+  width: 100%;
+}
+
+.game-column {
+  width: 10%;
+}
+
+.player-column {
+  width: 15%;
+}
+
+.time-column {
+  width: 10%;
+}
+
+.pokemon-column {
+  width: 40%;
+}
+
+.stats-column {
+  width: 15%;
+}
+
+.team-stats-text p {
+  margin: 0px;
+}
+
+.tag-column {
+  width: 10%;
+}
+
+.dataTables_filter {
+  display: none;
+}
+
+/****************************************************************/
+/* pokemon name above trainer css */
+.pokemon-trainer-name {
+  text-align: center;
+}
+
+
+/* pokemon image css */
+#pokemon-stats-chart {
+  position: fixed;
+  border: 1px solid #eee;
+  background: #fff;
+  box-shadow: 3px 4px 6px rgba(0,0,0,0.4);
+  padding: 3px; 
+  font-weight: bolder;
+  opacity: 0.9;
+}
+
+.pokemon-image-holder-div {
+  border: 1px solid black;
+}
+
+/* NOTE: make sure the image dimensions are 1/2 those of type-image, in order to have the types fit inside the holder div border*/
+.pokemon-image {
+  height: 96px;
+  width: 96px;
+}
+
+/* types css NOTE ^*/
+.type-image {
+  height: 19px; 
+  width: 48px;
+}
+
+.type-holder-div {
+  margin: 0px;
+}
+
+/* remove button on row */
+.remove-row-button {
+
+}
+
+/* sidebar/header extra css ******************************************* */
+/* change active nav item background color on click */
+.nav-item .active {
+  background: #272b30;
+}
+
+.far-right-button {
+  display: inline-block;
+  text-align: right;
+}
+
+.username-input {
+  border: 0;
+  border-bottom: 2px solid gray;
+  outline: 0;
+  color: white;
+  padding: 5px 0;
+  background: transparent;
+  transition: border-color 0.2s;
+  text-indent: 5px;
+}
+
+.username-input:focus{
+  color: white;
+}
+
+.navbar-toggler {
+  border: 0;
+}
+
+.underneath-help-div {
+  
+}
+
+/* notification popup */
+.notification {  
+  position: absolute;
+  bottom: 0px;
+  right: 0px;
+  width: 15%;
+  height: 0;  
+  box-sizing: border-box;
+  text-align: center;
+  overflow: hidden;
+  box-sizing: border-box;
+  transition: height 0.5s;
+}
+
+.yellow-notification {
+  height: 50px;
+  border: 1px solid rgba(241, 142, 6, 0.81);
+  background-color: rgba(220, 128, 1, 0.16);
+  box-shadow: 0px 0px 2px #ffb103;
+  color: gray;
+}
+
+#notifyType:before{
+  display: block;
+  margin-top: 15px; 
+}
+
+.green-notification {  
+  height: 50px;
+  border: 1px solid rgba(36, 241, 6, 0.46);
+  background-color: rgba(7, 149, 66, 0.35);
+  box-shadow: 0px 0px 2px #259c08;
+  color: gray;
+}
+
+.log-in-fail:before{
+  Content:"Not logged in";
+}
+
+.saved-teams-success:before{
+  Content:"Saved teams";
+}
+
+.load-teams-success:before{
+  Content:"Loaded teams";
+}
+
+.log-out-success:before{
+  Content:"Logged out";
+}
+
+/** team overview tab *************************************************** */
+
+.team-overview-hidden {
+  display: none;
+}
+
+.trainer-card-pokemon-team {
+  position: relative;
+  bottom: 105px;
+  max-width: 150px;
+  left: 10px;
+}
+</style>
+
+<body>
+
+  <!-- The Modal (add team popup div - not shown on load) -->
+  <div id="myModal" class="modal">
+    <!-- Modal content -->
+    <div class="modal-content">
+      <span class="close">&times;</span>
+
+      <div class="col-md-12 order-md-1 row justify-content-md-center">
+        <h3 class="col-md-auto mb-3">Add a new team: </h3>
+        <div class="team-building-wrapper">
+          <div class="row">
+            <div class="col-md-4 mb-3">
+              <label>Game</label>
+              <!-- <i class="fas fa-gamepad"></i> -->
+              <select class="selectize necessary-input" id="gameversion-select" placeholder="Game version...">
+                <option value=""></option>
+                <option value="Red">Red</option>
+                <option value="Blue">Blue</option>
+                <option value="Yellow">Yellow</option>
+                <option value="Gold">Gold</option>
+                <option value="Silver">Silver</option>
+                <option value="Crystal">Crystal</option>
+                <option value="Ruby">Ruby</option>
+                <option value="Sapphire">Sapphire</option>
+                <option value="Emerald">Emerald</option>
+                <option value="Fire Red">Fire Red</option>
+                <option value="Leaf Green">Leaf Green</option>
+                <option value="Diamond">Diamond</option>
+                <option value="Pearl">Pearl</option>
+                <option value="Platinum">Platinum</option>
+                <option value="Heart Gold">Heart Gold</option>
+                <option value="Soul Silver">Soul Silver</option>
+                <option value="Black">Black</option>
+                <option value="White">White</option>
+                <option value="Black 2">Black 2</option>
+                <option value="White 2">White 2</option>
+                <option value="X">X</option>
+                <option value="Y">Y</option>
+                <option value="Omega Ruby">Omega Ruby</option>
+                <option value="Alpha Sapphire">Alpha Sapphire</option>
+                <option value="Sun">Sun</option>
+                <option value="Moon">Moon</option>
+                <option value="Ultra Sun">Ultra Sun</option>
+                <option value="Ultra Moon">Ultra Moon</option>
+              </select>
+              <div class="invalid-input">
+                No game specified.
+              </div>
+            </div>
+            <div class="col-md-4 mb-3">
+              <label>Player name</label>
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text"><i class="fas fa-file-signature"></i></span>
+                </div>
+                <input type="text" class="form-control" id="playername-input" placeholder="Player name..." value="">
+              </div>
+              <small class="text-muted">Optional</small>
+            </div>
+            <div class="col-md-4 mb-3">
+              <label>Gender</label>
+              <select class="custom-select d-block w-100" id="playersex-select">
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+              </select>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label>Playthrough time</label>
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text"><i class="fas fa-stopwatch"></i></span></span>
+                </div>
+                <input type="text" class="form-control" id="playthroughtime-input" placeholder="Game playthrough time..." value="">
+              </div>
+              <small class="text-muted">Optional</small>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label>Date of finish</label>
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text"><i class="fas fa-calendar-day"></i></span></span>
+                </div>
+                <input type="text" class="form-control" id="finishdate-input" placeholder="Date file was finished..." value="">
+              </div>
+              <small class="text-muted">Optional</small>
+            </div>
+          </div>
+          
+          <hr class="mb-4">  
+          
+          <h4 class="mb-3">Pokemon Team:</h4>
+
+          <div class="row">
+            <div class="col-md-3 mb-3">
+              <label>Pokemon name</label>
+              <select class="" id="pokemon-dropdown" placeholder="Type Pokemon name..."></select>
+            </div>
+            <div class="col-md-3 mb-3">
+              <label>Nature</label>
+              <select class="selectize" id="pokemonnature-select" placeholder="Input Pokemon nature...">
+                <option value=""></option>
+                <option value="Lonely">Lonely</option>
+                <option value="Brave">Brave</option>
+                <option value="Adamant">Adamant</option>
+                <option value="Naughty">Naughty</option>
+                <option value="Bold">Bold</option>
+                <option value="Relaxed">Relaxed</option>
+                <option value="Impish">Impish</option>
+                <option value="Lax">Lax</option>
+                <option value="Modest">Modest</option>
+                <option value="Mild">Mild</option>
+                <option value="Quiet">Quiet</option>
+                <option value="Rash">Rash</option>
+                <option value="Calm">Calm</option>
+                <option value="Gentle">Gentle</option>
+                <option value="Sassy">Sassy</option>
+                <option value="Careful">Careful</option>
+                <option value="Timid">Timid</option>
+                <option value="Hasty">Hasty</option>
+                <option value="Jolly">Jolly</option>
+                <option value="Naive">Naive</option>
+                <option value="Hardy">Hardy</option>
+                <option value="Docile">Docile</option>
+                <option value="Serious">Serious</option>
+                <option value="Bashful">Bashful</option>
+                <option value="Quirky">Quirky</option>
+                <option value="none">No Nature</option>
+              </select>
+              <small class="text-muted">Optional</small>
+            </div>
+            <div class="col-md-2 mb-3">
+              <label>Nickname</label>
+              <input type="text" class="form-control" id="nickname-input" placeholder="Pokemon's nickname..." value="">
+              <small class="text-muted">Optional</small>
+            </div>
+            <div class="col-md-1 mb-3">
+              <label>Level</label>
+              <input type="text" class="form-control" id="level-input" placeholder="Pokemon's level..." value="">
+              <small class="text-muted">Optional</small>
+            </div>
+            <div class="col-md-1 mb-3"> 
+              <label>Other</label>
+              <div class="custom-control custom-checkbox" style="top: 4px;">
+                <input type="checkbox" class="custom-control-input" id="shiny-checkbox">
+                <label class="custom-control-label" for="shiny-checkbox">Shiny</label>
+              </div>
+              <small class="text-muted" style="position: relative; top: 12.3px;">Optional</small> 
+              <!-- manual addition of px to fit section with other inputs-->
+            </div>
+            <div class="col-md-2 mb-3">
+              <label>Done</label>
+              <div>
+                <button class="btn btn-primary btn-block" id="addpokemon-button" onclick="getPokemon('pokemon-list')">Add Pokemon</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-12">
+            <div id="pokemon-list"></div>
+          </div>
+
+          <br/>
+
+          <div class="row">
+            <div class="col-md-2 mb-3">
+              <button class="btn btn-primary btn-block" id="removepokemon-button" onclick="toggleRemovePokemonOnClick()">Remove Pokemon</button>
+            </div>
+            <div class="col-md-10 mb-3">
+              Click 'Remove Pokemon' then select the image of the Pokemon to remove. Press again to toggle off. 
+            </div>
+          </div>
+
+
+          <hr class="mb-4">  
+
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label>Add a tag</label>
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text"><i class="fas fa-tags"></i></span></span>
+                </div>
+                <input type="text" class="form-control" id="teamtag-input" placeholder="Add a tag/name to set this team apart..." value="">
+              </div>
+              <small class="text-muted">Optional</small>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label>Add a picture</label>
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text"><i class="fas fa-images"></i></span></span>
+                </div>
+                <input type="text" class="form-control" id="picture-input" placeholder="Add a link to a picture..." value="">
+              </div>
+              <small class="text-muted">Optional</small>
+            </div>
+          </div>   
+
+          <hr class="mb-4">   
+
+          <div class="invalid-input">Not all fields are filled in correctly. This team cannot be added.</div>
+          <button class="btn btn-primary btn-lg btn-block" id="addRow">Add this team</button>
+        </div>
+      </div>
+
+      <!--
+      <div class="bordered-pokemon-selection">
+        <div class="row">
+          <div class="col-lg-12">
+            <p> or </p>
+            <button id="clear-button" style="max-width: 300px;" onclick="exitModal()">Never Mind</button>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-lg-12">
+            <button id="clear-button" style="max-width: 150px;" onclick="clearPopupDivValues()">Clear</button>
+          </div>
+        </div>
+      </div>
+      -->
+    </div>
+  </div>
+
+  <!-- top bar - header -->
+  <nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0">
+    <div class="col-md-2 navbar-brand col-sm-3 mr-0">
+
+      <a class="">
+        <img style="position: relative; bottom: 5px; height: 25px; width: 35px;" src="https://raw.githubusercontent.com/msikma/pokesprite/master/icons/pokemon/regular/pikachu.png"> 
+        Pokemon Team Organizer
+      </a>
+    </div>
+
+    <div class="col-md-6 col-sm-6 mr-0">
+      <a class="text-white">Have a username? Load your teams here: </a>
+
+      <input class="input-form-control username-input" id="load-user-input-username" type="text" placeholder="Input username here..." aria-label="Search">
+      <button class="btn btn-outline-secondary" id="load-user-team-button"><i class="fas fa-cloud-download-alt"></i> Load teams</button>
+    </div>
+
+    <div class="col-md-3">
+      <span class="text-white">Currently logged in as: <span id="current-logged-in-user">Nobody</span></span> 
+      <button class="btn btn-outline-secondary" onclick="logOut()"><i class="fas fa-sign-out-alt"></i> Log out</button>
+    </div>
+    
+    <div class="col-md-1 far-right-button">
+      <span class="text-white">Help </span> 
+      <button class="navbar-toggler" id="help-navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggleExternalContent" aria-controls="navbarToggleExternalContent" aria-expanded="false" aria-label="Toggle navigation">
+          <i class="fas fa-question-circle"></i>
+      </button>
+    </div>
+  </nav> 
+
+  <!-- invisible element until help is selected -->
+  <div class="collapse underneath-help-div" id="navbarToggleExternalContent">    
+    <div class="bg-dark p-4" id="collapsed-extra-help-div">
+      <h5 class="text-white h4">Welcome to the Yboy Pokemon Team Organizer!</h5>
+      <span class="text-muted">Here you can save your finished Pokemon teams spanning from every game Red - Ultra Sun, forever!</span>
+      <br/>
+      <span class="text-muted">If you have an account, simply enter your username above and load your teams.</span>
+      <span class="text-muted">If you don't have an account, move to the 'My Account' tab, and create your own account. Then, build your teams!</span>
+      <br/>
+      <span class="text-white">Please note: you should always load your account before adding a new team. If you save over your existing team without loading, you will LOSE ALL SAVED TEAMS!</span>
+      <br/>
+      <span class="text-muted">After loading your account, simply move to 'My Teams', 'Add a new team', and input your playthrough!</span>
+      <span class="text-muted">Teams are not auto-saved, so make sure to save your team before you leave!</span>
+      <br/>
+      <span class="text-muted">You can sort your teams by clicking on the top of each column.</span> 
+      <br/>
+      <span class="text-white">Thanks and enjoy!</span>   
+    </div>
+  </div>
+  <!-- end invisible element -->
+
+
+  <!-- sidebar -->
+  <div class="container-fluid">
+    <div class="row">
+      <nav class="col-md-2 d-none d-md-block bg-light sidebar" id="main-sidebar">
+        <div class="sidebar-sticky">
+          <ul class="nav flex-column">
+            <li class="nav-item">
+              <a class="nav-link active" href="#team-main-table-tab" data-toggle="tab">
+                <i class="fas fa-home"></i>
+                My Teams <span class="sr-only">(current)</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#team-overview-tab" data-toggle="tab">
+                <i class="fas fa-street-view"></i>
+                Team Overview
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link text-muted" href="#stats-tab" data-toggle="tab">
+                <i class="fas fa-chart-bar"></i>
+                Stats
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#my-account-tab" onclick="createMyAccountTab()" data-toggle="tab">
+                <i class="fas fa-user"></i>
+                My Account
+              </a>
+            </li>
+
+            <li class="nav-item">
+              <a class="nav-link text-muted" href="#global-teams-tab" data-toggle="tab">
+                <i class="fas fa-user-friends"></i>
+                Global Teams
+              </a>
+            </li>
+            
+            <li class="nav-item">
+              <a class="nav-link text-muted" href="#tools-tab" data-toggle="tab">
+                <i class="fas fa-layer-group"></i>
+                Tools
+              </a>
+            </li>
+
+            
+          </ul>
+
+          <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+            <span>Other Options</span>
+            <a class="d-flex align-items-center text-muted" href="#">
+            </a>
+          </h6>
+          <ul class="nav flex-column mb-2">
+            <li class="nav-item">
+              <a class="nav-link" href="#">
+                <i class="fas fa-walking"></i>
+                Fire Emblem
+              </a>
+            </li>
+          </ul>
+        </div>
+      </nav>
+    </div>
+  </div>
+
+  <!-- all tabs included - list included in the sidebar -->
+  <div class="tab-content">
+    <!-- main teams - table page-->
+    <div class="tab-pane fade show active" id="team-main-table-tab">
+      <div class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
+        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+          <h1 class="h2">My Teams</h1>
+            <div class="btn-group mr-2 col-md-6">
+              <button id="open-modal-button" class="btn btn-sm btn-outline-secondary">
+                <i class="fas fa-plus-circle"></i> Add a new team
+              </button>
+              <!--
+              <button class="btn btn-sm btn-outline-secondary">Export</button>
+              -->
+            </div>
+          <div class="btn-toolbar mb-2 mb-md-0">
+            <!--
+            <div class="btn-group mr-2">
+              <button class="btn btn-sm btn-outline-secondary">Share</button>
+              <button class="btn btn-sm btn-outline-secondary">Export</button>
+            </div>
+            -->
+            <button class="btn btn-sm btn-outline-secondary" id="save-user-team-button"><i class="fas fa-save"></i> Save my teams</button>
+            
+          </div>
+        </div>
+
+        <img src="https://raw.githubusercontent.com/msikma/pokesprite/master/icons/pokemon/regular/bulbasaur.png">
+        <img src="https://raw.githubusercontent.com/msikma/pokesprite/master/icons/pokemon/regular/chikorita.png">
+        <img src="https://raw.githubusercontent.com/msikma/pokesprite/master/icons/pokemon/regular/treecko.png">
+        <img src="https://raw.githubusercontent.com/msikma/pokesprite/master/icons/pokemon/regular/charmander.png">
+        <img src="https://raw.githubusercontent.com/msikma/pokesprite/master/icons/pokemon/regular/cyndaquil.png">
+        <img src="https://raw.githubusercontent.com/msikma/pokesprite/master/icons/pokemon/regular/torchic.png">
+        <img src="https://raw.githubusercontent.com/msikma/pokesprite/master/icons/pokemon/regular/squirtle.png">
+        <img src="https://raw.githubusercontent.com/msikma/pokesprite/master/icons/pokemon/regular/totodile.png">
+        <img src="https://raw.githubusercontent.com/msikma/pokesprite/master/icons/pokemon/regular/mudkip.png">
+        <br/><br/>       
+
+        <table id="main-table" class="table table-hover table-bordered table-sm user-main-table" cellspacing="0" width="100%">
+          <thead>
+            <tr>
+              <th class="th-sm game-column">Game <i class="fas fa-sort"></i>
+              </th>
+              <th class="th-sm player-column">Player Name/Sex <i class="fas fa-sort"></i>
+              </th>
+              <th class="th-sm time-column">Playthrough Time/Finish Date <i class="fas fa-sort"></i>
+              </th>
+              <th class="th-sm pokemon-column">Pokemon Team <i class="fas fa-sort"></i>
+              </th>
+              <th class="th-sm stats-column">Team Stats <i class="fas fa-sort"></i>
+              </th>
+              <th class="th-sm tag-column">Picture/Tag <i class="fas fa-sort"></i>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+        </table>
+        <!-- -->
+
+        <img src="https://raw.githubusercontent.com/msikma/pokesprite/master/icons/pokemon/regular/turtwig.png">
+        <img src="https://raw.githubusercontent.com/msikma/pokesprite/master/icons/pokemon/regular/snivy.png">
+        <img src="https://raw.githubusercontent.com/msikma/pokesprite/master/icons/pokemon/regular/chespin.png">
+        <img src="https://raw.githubusercontent.com/msikma/pokesprite/master/icons/pokemon/regular/chimchar.png">
+        <img src="https://raw.githubusercontent.com/msikma/pokesprite/master/icons/pokemon/regular/tepig.png">
+        <img src="https://raw.githubusercontent.com/msikma/pokesprite/master/icons/pokemon/regular/fennekin.png">
+        <img src="https://raw.githubusercontent.com/msikma/pokesprite/master/icons/pokemon/regular/piplup.png">
+        <img src="https://raw.githubusercontent.com/msikma/pokesprite/master/icons/pokemon/regular/oshawott.png">
+        <img src="https://raw.githubusercontent.com/msikma/pokesprite/master/icons/pokemon/regular/froakie.png">
+
+
+        <!-- -->
+        <div id="graph-placeholder-div"></div>
+      </div>
+    </div>
+
+    <!-- Team overview tab -->
+    <div class="tab-pane fade" id="team-overview-tab">
+      <div class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
+        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+          <h1 class="h2">Team Overview</h1>
+          <div class="btn-toolbar mb-2 mb-md-0">
+            <div class="btn-group mr-2">
+              <button class="btn btn-sm btn-outline-secondary">Share</button>
+              <button class="btn btn-sm btn-outline-secondary">Export</button>
+            </div>
+            <button class="btn btn-sm btn-outline-secondary">
+              <i class="fas fa-plus-circle"></i>
+              Load...
+            </button>
+          </div>
+        </div>
+        <div class="">
+          <p>Coming soon! Team trainer cards...</p>
+          <div class="trainer-card">
+            <img src="img/trainer-card-black.png">
+            <div class="trainer-card-pokemon-team">
+              <img src="https://raw.githubusercontent.com/msikma/pokesprite/master/icons/pokemon/regular/typhlosion.png">
+              <img src="https://raw.githubusercontent.com/msikma/pokesprite/master/icons/pokemon/regular/ampharos.png">
+              <img src="https://raw.githubusercontent.com/msikma/pokesprite/master/icons/pokemon/regular/crobat.png">
+              <img src="https://raw.githubusercontent.com/msikma/pokesprite/master/icons/pokemon/regular/slowking.png">
+              <img src="https://raw.githubusercontent.com/msikma/pokesprite/master/icons/pokemon/regular/gengar.png">
+              <img src="https://raw.githubusercontent.com/msikma/pokesprite/master/icons/pokemon/regular/tyranitar.png">
+            </div>
+            <img src="img/pokemon-trainers/may.png" style="height: 80px; width: 64px; position: relative; bottom: 168px; left: 170px;">
+            <img src="img/big-hoss-text.png" style="position: relative; bottom: 220px; height: 12px; right: 60px;">
+          </div>
+        </div>
+        <div class="team-overview-hidden">
+          <p>Hidden content</p>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- stats tab -->
+    <div class="tab-pane fade" id="stats-tab">
+      <div class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
+        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+          <h1 class="h2">Stats</h1>
+          <div class="btn-toolbar mb-2 mb-md-0">
+            <div class="btn-group mr-2">
+              <button class="btn btn-sm btn-outline-secondary">Share</button>
+              <button class="btn btn-sm btn-outline-secondary">Export</button>
+            </div>
+            <button class="btn btn-sm btn-outline-secondary">
+              <i class="fas fa-plus-circle"></i>
+              Load...
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- my-account tab -->
+    <div class="tab-pane fade" id="my-account-tab">
+      <div class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
+        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+          <h1 class="h2">My Account</h1>
+          <div class="btn-toolbar mb-2 mb-md-0">
+            <div class="btn-group mr-2">
+              <button class="btn btn-sm btn-outline-secondary">Share</button>
+              <button class="btn btn-sm btn-outline-secondary">Export</button>
+            </div>
+            <button class="btn btn-sm btn-outline-secondary">
+              <i class="fas fa-plus-circle"></i>
+              Load...
+            </button>
+          </div>
+        </div>
+
+        <div class="col-md-12">
+          <div class="" id="my-account-add-to-div">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- global teams tab -->
+    <div class="tab-pane fade" id="global-teams-tab">
+      <div class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
+        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+          <h1 class="h2">Global Teams</h1>
+          <div class="btn-toolbar mb-2 mb-md-0">
+            <div class="btn-group mr-2">
+              <button class="btn btn-sm btn-outline-secondary">Share</button>
+              <button class="btn btn-sm btn-outline-secondary">Export</button>
+            </div>
+            <button class="btn btn-sm btn-outline-secondary">
+              <i class="fas fa-plus-circle"></i>
+              Load...
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- tools tab -->
+    <div class="tab-pane fade" id="tools-tab">
+      <div class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
+        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+          <h1 class="h2">Tools</h1>
+          <div class="btn-toolbar mb-2 mb-md-0">
+            <div class="btn-group mr-2">
+              <button class="btn btn-sm btn-outline-secondary">Share</button>
+              <button class="btn btn-sm btn-outline-secondary">Export</button>
+            </div>
+            <button class="btn btn-sm btn-outline-secondary">
+              <i class="fas fa-plus-circle"></i>
+              Load...
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- end of tabs -->
+  </div>
+
+  <!-- notification for bottom right corner -->
+  <div class="notification"><span id="notifyType" class=""></span></div>
+
+
+  <!-- End main HTML -->
+
+  <!-- jQuery -->
+  <script type="text/javascript" src="js/jquery.min.js"></script>
+  <!-- Bootstrap core JavaScript -->
+  <script type="text/javascript" src="js/bootstrap.min.js"></script>
+  <!-- datatables.js -->
+  <script type="text/javascript" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
+  <script type="text/css" src="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css"></script>
+  <script type="text/javascript" src="js/dataTables.bootstrap4.js"></script>
+  <script type="text/css" src="js/dataTables.bootstrap4.css"></script>
+  <!-- chart.js -->
+  <script type="text/javascript" src="js/Chart.min.js"></script>
+  <script type="text/css" src="js/Chart.min.css"></script>
+
+  <!-- The core Firebase JS SDK is always required and must be listed first -->
+  <script src="https://www.gstatic.com/firebasejs/7.7.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/7.7.0/firebase-analytics.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/7.7.0/firebase-database.js"></script>
+  <!-- all written firebase code -->
+  <script type="text/javascript" src="js/firebase-code.js"></script>
+
+  <!-- main.js, pokemon-team.js -->
+  <script type="text/javascript" src="js/main.js"></script>
+  <script type="text/javascript" src="js/pokemon-team.js"></script>
+  <!-- selectize - searchable scrolldowns -->
+  <script src="js/selectize.js"></script>
+  <link rel="stylesheet" href="css/selectize.css"/>
+  <!-- pokesprite github -->
+  <link type="text/css" href="css/pokesprite.min.css" rel="stylesheet"/>
+  <link type="text/css" href="css/overview.min.css" rel="stylesheet"/>
+  <script src="js/pokesprite.min.js"></script>
+
+  <!-- on document ready/jquery -->
+  <script type="text/javascript">
+
+  $(document).ready(function() {
+
+    // add a search bar to look through each cell
+    // Setup - add a text input to each footer cell
+    $('#main-table tfoot th').each( function () {
+        var title = $(this).text();
+        $(this).html( '<input type="text" placeholder="Search '+title+'" />' );
+    } );
+ 
+    // DataTable
+    var table = $('#main-table').DataTable( {
+      "aLengthMenu": [[5, 10, 20, -1], [5, 10, 20, "All"]],
+      "pageLength": 5,
+      "searching": false // necessary, otherwise mixes up other inputs
+      }
+    );
+
+    // format css for helper div to match the left of the sidebar
+    formatHelperDiv();
+ 
+    // Apply the search (disabled now)
+    table.columns().every( function () {
+        var that = this;
+ 
+        $('input', this.footer() ).on( 'keyup change clear', function () {
+          if( that.search() !== this.value ) {
+            that
+              .search( this.value )
+              .draw();
+          }
+        });
+    });
+
+    // add row on-click button
+    var t = $('#main-table').DataTable();
+    //var counter = 1;
+
+    // add search ability to select
+    //$(document).ready(function () {
+    $('.selectize').selectize({
+        // 
+    });
+
+    var IDCounter = 0;
+
+    $('#addRow').on('click', function() {
+
+      var gameVersion = document.getElementById("gameversion-select").value;
+
+      // turn red if something didn't get filled in
+      if (gameVersion === ""){
+        highlightModalErrors();
+        console.log("No game selected!");
+        return;
+      }
+
+      var playerName = document.getElementById("playername-input").value;
+      var playerSex = document.getElementById("playersex-select").value;
+      
+      // create team stats and graphs
+      var userPokemonList = document.getElementById("pokemon-list");
+
+      // convert pokemon list from images to backend
+      currentPokemonArray = createPokemonArrayWithAltInfo("pokemon-list");
+
+      // add team to backend
+      var addedPokemonTeam = createPokemonTeamObj(
+        gameVersion, 
+        currentPokemonArray, // pokemon
+        playerName, 
+        playerSex,
+        document.getElementById("playthroughtime-input").value,
+        document.getElementById("finishdate-input").value,
+        document.getElementById("teamtag-input").value,
+        "" // picture
+      );
+
+      // add the newly created team to the user's backend
+      thisUser.teams.push(addedPokemonTeam);
+
+      // randomly generated number from createTeamObj which binds to team
+      var teamRandomGeneratedID = addedPokemonTeam.randomID;
+
+      // create additional stats to add beside pokemon team
+      var teamStatsDiv = '<h4>Team Leaders: </h4><div class="leader-canvas-holder"><canvas class="" id="' + teamRandomGeneratedID + '-leaders-canvas"/></div>' +
+        '<h4>Team Averages: </h4><div class="average-canvas-holder"><canvas class="" id="' + teamRandomGeneratedID + '-averages-canvas"/></div>';
+
+
+      // the current row added will be the length of the rows in the table
+      var rowCounter = t.rows().count();
+
+      addRowToDataTable(t, 
+        gameVersion, 
+        playerName, 
+        playerSex, 
+        document.getElementById("finishdate-input").value, 
+        document.getElementById("playthroughtime-input").value,
+        userPokemonList.innerHTML, 
+        teamStatsDiv,
+        document.getElementById("teamtag-input").value,
+        teamRandomGeneratedID,
+        rowCounter);
+
+      IDCounter = IDCounter + 1;
+
+      // create graphs for the stats on the input canvas
+      obtainTeamStats(teamRandomGeneratedID + "-leaders-canvas", teamRandomGeneratedID + "-averages-canvas", false); 
+
+      // clear all info in div, clear current pokemon array, clear added pokemon image divs
+      clearPopupDivValues(); 
+      currentPokemonArray = [];
+
+      // exit modal
+      exitModal();
+    });
+
+    $('#help-navbar-toggler').on('click', function() {
+      console.log($('#help-navbar-toggler').attr("aria-expanded"));
+
+      if ($('#help-navbar-toggler').attr("aria-expanded")){
+        $("i", this).toggleClass("fa-question-circle fa-angle-double-up");
+      } else {
+        $("i", this).toggleClass("fa-angle-double-up fa-question-circle");
+      }
+      formatHelperDiv();
+    });
+
+  });
+
+  function addRowToDataTable(table, gameVersion, playerName, playerSex, finishDate, playthroughTime, pokemonImagesString, teamStatsString, tag, randomTeamID, rowCount){
+    var playerTrainerImageString = getTrainerImage(gameVersion, playerSex);
+
+    var playerNameDiv = '<div><h4>' + playerName + '</h4></div>';
+
+    var playerNameTimeWrapperDiv = '<div>' + playerNameDiv + playerTrainerImageString + '</div>';
+
+    // pokemon images string comes as html in string format detailing <img> w/ pokemon data in alt attribute
+    // team stats string comes in as html in string format detailing simple text (or charts) with data about the used team
+
+    // create row-deleting button - IDCounter NOT to be confused with rowCounter, in order to prevent same ID between two buttons
+    var deleteRowButton = "<button type='button' class='remove-row-button' value='" + randomTeamID + "'id='" + randomTeamID + "-row-delete-button' onclick='deleteRowWithID(\"" + randomTeamID + "-row-delete-button\")'>Delete Row</button>";
+
+    // ensure the button exists when the deletion method is attached - otherwise it won't be deletable
+    var newTableRowID = 'table-row-' + randomTeamID;
+
+    table.row.add([
+      gameVersion,
+      playerNameTimeWrapperDiv,
+      'Finished on: ' + finishDate + ', in ' + playthroughTime,
+      pokemonImagesString,
+      teamStatsString,
+      'Picture: ' + '\nTag: ' + tag + deleteRowButton
+    ]).node().id = newTableRowID;
+    table.draw(false);
+
+    // attribute imagehover css to current party
+    createPokemonImageHoverCSS(newTableRowID);
+  }
+
+  function clearDataTable(){
+    var t = $('#main-table').DataTable();
+    t.clear().draw();
+  }
+
+  function deleteRowWithID(buttonID){
+    deleteTeamObjFromUserObj(buttonID);
+
+    var t = $('#main-table').DataTable(); // obtain main datatable
+    t.row($("#" + buttonID).parents('tr')).remove().draw();
+  }
+
+  function allowTableSearch(){
+    $('.dataTables_filter').css(
+      "display", "inline-block"
+    );
+  }
+
+  // functions to highlight/remove errors in modal fillin
+  function highlightModalErrors(){
+    $('.invalid-input').css(
+      "display", "inline-block"
+    );
+  }
+
+  function clearModalErrors(){
+    $('.invalid-input').css(
+      "display", "none"
+    );
+  }
+
+  // functions to fix header helper-div css
+  function formatHelperDiv(){
+    var sidebarWidth = $("#main-sidebar").width() + 30;
+
+    $("#collapsed-extra-help-div").css(
+      "margin-left", sidebarWidth
+    );
+  }
+
+  // load team button from db
+  $('#load-user-team-button').on('click', function() {
+    if ($('#load-user-input-username').val()){
+      loadUsername($('#load-user-input-username').val());
+    }
+  });
+
+  $('#save-user-team-button').on('click', function() {
+    saveUnderUsername();
+  });
+
+  </script>
+
+<!-- Modal Javascript -->
+<script>
+// Get the modal
+var modal = document.getElementById("myModal");
+
+// Get the button that opens the modal
+var btn = document.getElementById("open-modal-button");
+
+// Get the <span> element that closes the modal
+var span = document.getElementsByClassName("close")[0];
+
+// When the user clicks on the button, open the modal
+btn.onclick = function() {
+  modal.style.display = "block";
+  // when opening 'add team', if the user is not logged in, show an alert to show that this team won't be saved and cannot be added
+  alertUserAddingTeamWithoutLogIn();
+
+  // populate pokemon dropdown select on modal open
+  // populatePokemonDropdown();
+}
+
+// When the user clicks on <span> (x), close the modal
+span.onclick = function() {
+  modal.style.display = "none";
+}
+
+function clearPopupDivValues() {
+
+  // no reason to remove version/sex value in case it is reused
+  //document.getElementById("gameversion-select").value = "";
+  //document.getElementById("playersex-select").value = "";
+  document.getElementById("pokemon-list"); // entire pokemon children
+  
+  document.getElementById("playername-input").value = "";
+  document.getElementById("playthroughtime-input").value = "";
+  document.getElementById("finishdate-input").value = "";
+  document.getElementById("teamtag-input").value = "";
+
+  // clear pokemon images/divs
+  $("#pokemon-list").children().find(".pokemon-image").each(function(index) {
+    $(this).parent().remove();
+  });  
+
+  clearModalErrors();
+
+  // pokemon level not deleted
+  // pokemon nickname not deleted
+  // shiny not reset
+
+}
+
+function exitModal() {
+  modal.style.display = "none";
+}
+/*
+var refreshPokemon = document.getElementById("refresh-pokemon-select");
+
+refreshPokemon.onclick = function() {
+  // populate pokemon dropdown select on modal open
+  populatePokemonDropdown();
+}
+
+/*
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function(event) {
+  if (event.target == modal) {
+    modal.style.display = "none";
+  }
+}
+*/
+</script>
+
+<!-- 
+
+  toadd:
+
+      // create website!
+
+      fun extra info to add: most used pokemon (in a different 'tab'), most played game, most used gender, highest pokemon at each stat, 
+      number of shinies, fastest clear time, latest clear time, etc.
+
+      put two extra buttons on modal: clearPopupDivValues(), exitModal()
+
+      do we need this?: 
+      WEAKNESS + ADVANTAGES for teams
+      add alohan forms if need be
+      fix css on modal when differnet sized natures are selected
+      error messages for "" (alert: are you sure you want to add team w/o name? ; w/o time?; alert no game input: etc.) 
+      (also, add typical sort by time, then apply it on refresh)
+
+      non-needed:
+      AFTER A TEAM IS FINALIZED/on clear, DELETE EVERYTHING IN THE DIVS
+
+      thanks section:
+      pokesprite
+      pokeapi
+      bootstrap
+      firebase
+      all locations for images - bulbapedia, etc.
+      great site for trainer cards: https://pokecharms.com/works/hgss-trainer-cards.18030/
+    
+  
+-->
+
+</body>
+</html>
