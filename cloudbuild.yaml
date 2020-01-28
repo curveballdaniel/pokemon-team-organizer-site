@@ -1,6 +1,3 @@
 steps:
-- name: gcr.io/cloud-builders/git
-  args: ['clone', 'https://github.com/curveballdaniel/pokemon-team-organizer-site']
-steps:
 - name: 'gcr.io/cloud-builders/gcloud'
-  args: ['app', 'deploy']
+  args: ['app', 'deploy', '--project=pokemon-team-organizer-site', '--version=$SHORT_SHA']
