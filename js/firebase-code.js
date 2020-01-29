@@ -504,6 +504,11 @@ function populateDropdownWithUsers(){
 }
 
 function loadGlobalUserIntoTab(inUser){
+  if (inUser == thisUser.username){
+    alert("Cannot load current user in Global Teams.");
+    return;
+  }
+
   obtainTeamsFromDatabase('global-teams-table', inUser);
   // set user's name on the bottom of the graph - used to check if the user then tries to log in to the same account
   document.getElementById("current-teams-user-name").innerHTML = inUser;
