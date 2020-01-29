@@ -593,7 +593,7 @@ bottom: .5em;
             </li>
 
             <li class="nav-item">
-              <a class="nav-link text-muted" href="#global-teams-tab" data-toggle="tab">
+              <a class="nav-link text-muted" onclick="populateDropdownWithUsers()" href="#global-teams-tab" data-toggle="tab">
                 <i class="fas fa-user-friends"></i>
                 Global Teams
               </a>
@@ -746,16 +746,7 @@ bottom: .5em;
       <div class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
         <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
           <h1 class="h2">Stats</h1>
-          <div class="btn-toolbar mb-2 mb-md-0">
-            <div class="btn-group mr-2">
-              <button class="btn btn-sm btn-outline-secondary">Share</button>
-              <button class="btn btn-sm btn-outline-secondary">Export</button>
-            </div>
-            <button class="btn btn-sm btn-outline-secondary">
-              <i class="fas fa-plus-circle"></i>
-              Load...
-            </button>
-          </div>
+
         </div>
       </div>
     </div>
@@ -765,16 +756,7 @@ bottom: .5em;
       <div class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
         <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
           <h1 class="h2">My Account</h1>
-          <div class="btn-toolbar mb-2 mb-md-0">
-            <div class="btn-group mr-2">
-              <button class="btn btn-sm btn-outline-secondary">Share</button>
-              <button class="btn btn-sm btn-outline-secondary">Export</button>
-            </div>
-            <button class="btn btn-sm btn-outline-secondary">
-              <i class="fas fa-plus-circle"></i>
-              Load...
-            </button>
-          </div>
+
         </div>
 
         <div class="col-md-12">
@@ -789,17 +771,47 @@ bottom: .5em;
       <div class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
         <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
           <h1 class="h2">Global Teams</h1>
-          <div class="btn-toolbar mb-2 mb-md-0">
-            <div class="btn-group mr-2">
-              <button class="btn btn-sm btn-outline-secondary">Share</button>
-              <button class="btn btn-sm btn-outline-secondary">Export</button>
-            </div>
-            <button class="btn btn-sm btn-outline-secondary">
-              <i class="fas fa-plus-circle"></i>
-              Load...
-            </button>
+        </div>
+
+        <p>Here you can browse any user's teams!</p>
+
+        <div class="row">
+          <div class="col-md-4">
+            <p>Select user: </p>
+            <select class="" id="all-users-list-dropdown" placeholder="Select a user..."></select>
+          </div>
+          <div class="col-md-6">
+            <p>-</p>
+            <button class="btn btn-outline-secondary" id="load-global-user-team-button"><i class="fas fa-cloud-download-alt"></i> Load teams</button>
+          </div>
+          <div class="col-md-2">
+            <p>-</p>
+            <button class="btn btn-outline-secondary" onclick="clearGlobalUserTable()"><i class="fas fa-minus-circle"></i> Clear table</button>
           </div>
         </div>
+
+        <table id="global-teams-table" class="table table-hover table-bordered table-sm user-main-table" cellspacing="0" width="100%">
+          <thead>
+            <tr>
+              <th class="th-sm game-column">Game <i class="fas fa-sort"></i>
+              </th>
+              <th class="th-sm player-column">Player Name/Sex <i class="fas fa-sort"></i>
+              </th>
+              <th class="th-sm time-column">Playthrough Time/Finish Date <i class="fas fa-sort"></i>
+              </th>
+              <th class="th-sm pokemon-column">Pokemon Team <i class="fas fa-sort"></i>
+              </th>
+              <th class="th-sm stats-column">Team Stats <i class="fas fa-sort"></i>
+              </th>
+              <th class="th-sm tag-column">Picture/Tag <i class="fas fa-sort"></i>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+        </table>
+
+        <p id="current-teams-user-name"></p>
+
       </div>
     </div>
 
@@ -876,6 +888,14 @@ bottom: .5em;
  
     // DataTable
     var table = $('#main-table').DataTable( {
+      "aLengthMenu": [[5, 10, 20, -1], [5, 10, 20, "All"]],
+      "pageLength": 5,
+      "searching": false // necessary, otherwise mixes up other inputs
+      }
+    );
+
+    // DataTable
+    var globalTeamsTable = $('#global-teams-table').DataTable( {
       "aLengthMenu": [[5, 10, 20, -1], [5, 10, 20, "All"]],
       "pageLength": 5,
       "searching": false // necessary, otherwise mixes up other inputs
@@ -1029,6 +1049,13 @@ bottom: .5em;
     t.clear().draw();
   }
 
+  // clear global teams tab table - and the loaded 'user' on the bottom
+  function clearGlobalUserTable(){
+    document.getElementById("current-teams-user-name").innerHTML = "";
+    var t = $('#global-teams-table').DataTable();
+    t.clear().draw();
+  }
+
   function deleteRowWithID(buttonID){
     deleteTeamObjFromUserObj(buttonID);
 
@@ -1073,6 +1100,11 @@ bottom: .5em;
 
   $('#save-user-team-button').on('click', function() {
     saveUnderUsername();
+  });
+
+  $('#load-global-user-team-button').on('click', function() {
+    // turn this into a function that takes in this value, then loads the users into the table: #global-teams-table
+    loadGlobalUserIntoTab($('#all-users-list-dropdown').val());
   });
 
   </script>

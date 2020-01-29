@@ -116,8 +116,11 @@ function writeUserTeamsToDatabase(){
 
 }
 
-function obtainTeamsFromDatabase(){
+function obtainTeamsFromDatabase(inputTable, optionalUsername){
   var username = thisUser.username;
+
+  if (optionalUsername) username = optionalUsername;
+
   var userTeamsDB = firebase.database().ref('users/' + username + '/teams/');
 
   var obtainedUserDBTeams = [];
@@ -183,7 +186,7 @@ function obtainTeamsFromDatabase(){
     thisUser.teams = obtainedUserDBTeams;
 
     // clear table, then re-add all teams
-    var t = $('#main-table').DataTable();
+    var t = $('#' + inputTable).DataTable();
     t.clear().draw();
 
     // once db 'once' method is left, data is lost - thus we must update the table here:
@@ -230,7 +233,7 @@ function obtainTeamsFromDatabase(){
   }).then(function() {
     // after finish, thisUser will be updated - but not until after .then is called
     triggerLoadedAccountNotificationDiv();
-    setCurrentlyLoggedInUser();
+    if (!optionalUsername) setCurrentlyLoggedInUser();
     //console.log(thisUser);
   });
 
@@ -340,6 +343,11 @@ function loadUsername(inUsername){
   var database = firebase.database();
   var usernameExist = false;
 
+  if (document.getElementById("current-teams-user-name").innerHTML == inUsername){
+    alert("Your team is currently loaded in the 'Global Teams' tab. Please clear your loaded table in 'Global Teams' first before logging into this account.")
+    return;
+  }
+
   database.ref().once('value', function(snap){
     snap.child("users").forEach(function(user){
 
@@ -353,7 +361,7 @@ function loadUsername(inUsername){
     // once finished, if the username is not in use, create the username, and add team records to data
     if (usernameExist){
       thisUser.username = inUsername;
-      obtainTeamsFromDatabase();
+      obtainTeamsFromDatabase('main-table');
     } else {
       alert("This username does not exist! Either make an account, or try again.");
     }
@@ -366,11 +374,8 @@ function saveUnderUsername(){
   
   if (!inUsername){
     triggerNotLoggedInNotificationDiv();
-    console.log("Not logged in.");
     return;
   }
-
-  console.log(inUsername);
 
   var database = firebase.database();
   var usernameExist = false;
@@ -473,6 +478,38 @@ function alertUserAddingTeamWithoutLogIn(){
   }
 }
 
+/* global teams tab functions */
+// function ran on click of the 'global teams' tab
+function populateDropdownWithUsers(){
+  var database = firebase.database();
+
+  var dropdownID = "all-users-list-dropdown";
+
+  var $dropdown = $('#' + dropdownID);
+  $dropdown.empty();
+  $dropdown.append('<option></option>');
+
+  database.ref().once('value', function(snap){
+    snap.child("users").forEach(function(user){
+      // add each user to the dropdown with value of the user - if the button is clicked, it will load all teams of the selected user
+      // note that the user himself should not be added - this is because if the user's teams are loaded, there will be duplicate IDs and charts will not show
+      if (user.key !== thisUser.username){
+        $dropdown.append($('<option></option>').attr('value', user.key).text(user.key));
+      }
+    });
+
+  }).then(function() {
+    $dropdown.selectize(); // then selectize the dropdown to add css/fill-in titles
+  });
+}
+
+function loadGlobalUserIntoTab(inUser){
+  obtainTeamsFromDatabase('global-teams-table', inUser);
+  // set user's name on the bottom of the graph - used to check if the user then tries to log in to the same account
+  document.getElementById("current-teams-user-name").innerHTML = inUser;
+}
+
+/* notification functions */
 // edit notification class on the bottom right to show message pertaining to user action
 function triggerSavedTeamsNotificationDiv(){
   createNotificationCSS(".notification", "green-notification", "#notifyType", "saved-teams-success");
