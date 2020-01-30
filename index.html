@@ -936,6 +936,7 @@ bottom: .5em;
     var table = $('#main-table').DataTable( {
       "aLengthMenu": [[5, 10, 20, -1], [5, 10, 20, "All"]],
       "pageLength": 5,
+      "dom": '<"top"iflp<"clear">>rt<"bottom"iflp<"clear">>',
       "searching": false // necessary, otherwise mixes up other inputs
       }
     );
@@ -944,6 +945,7 @@ bottom: .5em;
     var globalTeamsTable = $('#global-teams-table').DataTable( {
       "aLengthMenu": [[5, 10, 20, -1], [5, 10, 20, "All"]],
       "pageLength": 5,
+      "dom": '<"top"iflp<"clear">>rt<"bottom"iflp<"clear">>',
       "searching": false // necessary, otherwise mixes up other inputs
       }
     );
