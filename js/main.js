@@ -12,35 +12,46 @@ var removePokemonOnClick = false;
 /********************************************************************
 obtain input pokemon value (from html), get from pokeAPI, then return stats + image
 *********************************************************************/
-function getPokemon(idAddToName){
-  // obtain pokemon name from selected dropdown, then get from api
-  var input = document.getElementById("pokemon-dropdown").value;
 
-  if (input === "") {
-  	return;
+  // Create the XHR object.
+function createCORSRequest(method, url) {
+  var xhr = new XMLHttpRequest();
+  if ("withCredentials" in xhr) {
+    // XHR for Chrome/Firefox/Opera/Safari.
+    xhr.open(method, url, true);
+  } else if (typeof XDomainRequest != "undefined") {
+    // XDomainRequest for IE.
+    xhr = new XDomainRequest();
+    xhr.open(method, url);
+  } else {
+    // CORS not supported.
+    xhr = null;
+  }
+  return xhr;
+}
+
+// Make the actual CORS request.
+function makeCorsRequest(input, idAddToName) {
+  // This is a sample server that supports CORS.
+  var url = 'http://pokeapi.co/api/v2/pokemon/' + input + '/';
+
+  var xhr = createCORSRequest('GET', url);
+  if (!xhr) {
+    alert('CORS not supported');
+    return;
   }
 
-  document.getElementById("addpokemon-button").disabled = true;
-
-  // CLEARED FOR ERRORS: MR MIME (mr-mime) TYPE NULL (type-null), TAPUs, NIDORAN(male:female)
-
-  var settings = {
-    "async": true,
-    "crossDomain": true,
-    "url": "http://pokeapi.co/api/v2/pokemon/" + input + "/",
-    "method": "GET",
-    "headers": {}
-  }
-
-  $.ajax(settings).done(function (response) {
-    //console.log(response);
+  // Response handlers.
+  xhr.onload = function() {
+    var text = xhr.responseText;
+    var response = JSON.parse(text);
 
     var typesString = "";
 
     for (i = response.types.length - 1; i > -1; i--){
       typesString = typesString + response.types[i].type.name;
       if (i > 0){
-      	typesString = typesString + ":";
+        typesString = typesString + ":";
       }
     }
 
@@ -74,19 +85,17 @@ function getPokemon(idAddToName){
     var pokemonNature = document.getElementById("pokemonnature-select").value;
 
     // add pokemon stats + nature as data in img (alt)
-    // 6 stats, then nature, then name, then types, then shiny (t/f), then lvl
+    // 6 stats, then nature, then name, then types, then shiny (t/f), then lvl...
     newPokemon.setAttribute("name", input);
     newPokemon.setAttribute("alt", hpStat + "," + attackStat + "," + defenseStat + "," + 
-    	specialAttackStat + "," + specialDefenseStat + "," + speedStat + 
-    	"," + pokemonNature + 
-    	"," + input + // pokemon name
-    	"," + typesString + // pokemon types
-    	"," + document.getElementById("shiny-checkbox").checked + // shiny
-    	"," + document.getElementById("level-input").value + // pokemon level
-    	"," + document.getElementById("nickname-input").value + // pokemon nickname
-    	"," + ""); // can change later to be pokemon gender/etc.
-
-    //newPokemon.setAttribute("title", hpStat + "," + attackStat + "," + defenseStat + "," + specialAttackStat + "," + specialDefenseStat + "," + speedStat);
+      specialAttackStat + "," + specialDefenseStat + "," + speedStat + 
+      "," + pokemonNature + 
+      "," + input + // pokemon name
+      "," + typesString + // pokemon types
+      "," + document.getElementById("shiny-checkbox").checked + // shiny
+      "," + document.getElementById("level-input").value + // pokemon level
+      "," + document.getElementById("nickname-input").value + // pokemon nickname
+      "," + ""); // can change later to be pokemon gender/etc.
 
     // up counter for next ids
     counter = counter + 1;
@@ -96,12 +105,33 @@ function getPokemon(idAddToName){
 
     $("#" + pokemonHolderDivName).append(typesDiv);
 
-    // final append to pokemon-list - add the div to the main passed in ID name
-    //document.getElementById(idAddToName).appendChild(newPokemon);
-
-    //document.getElementById("example").appendChild(newPokemon);
     document.getElementById("addpokemon-button").disabled = false;
-  });
+  };
+
+  xhr.onerror = function() {
+    alert('Woops, there was an error making the request.');
+  };
+
+  xhr.send();
+
+  return null;
+}
+
+
+function getPokemon(idAddToName){
+  // obtain pokemon name from selected dropdown, then get from api
+  var input = document.getElementById("pokemon-dropdown").value;
+
+  if (input === "") {
+  	return;
+  }
+
+  document.getElementById("addpokemon-button").disabled = true;
+
+  // CLEARED FOR ERRORS: MR MIME (mr-mime) TYPE NULL (type-null), TAPUs, NIDORAN(male:female)
+  // obtain response from CORS request
+  makeCorsRequest(input, idAddToName);
+
 }
 
 // return string HTML for types input - input comes in 'x:y' format, or 'x'
