@@ -906,6 +906,24 @@ bottom: .5em;
   <script type="text/javascript">
 
   $(document).ready(function() {
+    $.fn.dataTable.Api.register('row().show()', function() {
+      var page_info = this.table().page.info();
+      // Get row index
+      var new_row_index = this.index();
+      // Row position
+      var row_position = this.table().rows()[0].indexOf( new_row_index );
+      // Already on right page ?
+      if( row_position >= page_info.start && row_position < page_info.end ) {
+          // Return row object
+          return this;
+      }
+      // Find page number
+      var page_to_display = Math.floor( row_position / this.table().page.len() );
+      // Go to that page
+      this.table().page( page_to_display );
+      // Return row object
+      return this;
+    });
 
     // add a search bar to look through each cell
     // Setup - add a text input to each footer cell
@@ -947,7 +965,7 @@ bottom: .5em;
     });
 
     // add row on-click button
-    var t = $('#main-table').DataTable();
+    //var t = $('#main-table').DataTable();
     //var counter = 1;
 
     // add search ability to select
@@ -1002,9 +1020,9 @@ bottom: .5em;
 
 
       // the current row added will be the length of the rows in the table
-      var rowCounter = t.rows().count();
+      var rowCounter = table.rows().count();
 
-      addRowToDataTable(t, 
+      addRowToDataTable(table, 
         gameVersion, 
         playerName, 
         playerSex, 
@@ -1068,6 +1086,9 @@ bottom: .5em;
     ]).node().id = newTableRowID;
     table.draw(false);
 
+    // jump to specific page the row exists on - otherwise the canvas ID cannot be found on chart addition (in teamStats) for obtainTeamStats()
+    table.row('#' + newTableRowID).show().draw(false);
+
     // attribute imagehover css to current party
     createPokemonImageHoverCSS(newTableRowID);
   }
@@ -1088,7 +1109,7 @@ bottom: .5em;
     deleteTeamObjFromUserObj(buttonID);
 
     var t = $('#main-table').DataTable(); // obtain main datatable
-    t.row($("#" + buttonID).parents('tr')).remove().draw();
+    t.row($("#" + buttonID).parents('tr')).remove().draw(false);
   }
 
   function allowTableSearch(){
@@ -1151,6 +1172,7 @@ var span = document.getElementsByClassName("close")[0];
 // When the user clicks on the button, open the modal
 btn.onclick = function() {
   modal.style.display = "block";
+
   // when opening 'add team', if the user is not logged in, show an alert to show that this team won't be saved and cannot be added
   alertUserAddingTeamWithoutLogIn();
 
@@ -1213,7 +1235,6 @@ window.onclick = function(event) {
 
   toadd:
 
-      // some bugs exist with using Global Teams with the current logged in team, and: logging in with user, logging out (leaving teams in table), and loading the same logged out user in Global Teams
 
       fun extra info to add: most used pokemon (in a different 'tab'), most played game, most used gender, highest pokemon at each stat, 
       number of shinies, fastest clear time, latest clear time, etc.

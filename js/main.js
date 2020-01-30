@@ -31,7 +31,7 @@ function createCORSRequest(method, url) {
 }
 
 // Make the actual CORS request.
-async function makeCorsRequest(input, idAddToName) {
+function makeCorsRequest(input, idAddToName) {
   // This is a sample server that supports CORS.
   var url = 'https://pokeapi.co/api/v2/pokemon/' + input + '/';
 
@@ -317,14 +317,14 @@ function obtainTeamStats(inLeadersCanvasID, inAveragesCanvasID, fromDBboolean, t
 
   if (!fromDBboolean){
   	$("#pokemon-list").children().each(function () {
-		var $pokemonMainDiv = $(this).children();
-		var $pokemonImageDiv = $(this).children(".pokemon-image");
-		var stats = $pokemonImageDiv.attr("alt");
-		var name = $pokemonImageDiv.attr("name");
+  		var $pokemonMainDiv = $(this).children();
+  		var $pokemonImageDiv = $(this).children(".pokemon-image");
+  		var stats = $pokemonImageDiv.attr("alt");
+  		var name = $pokemonImageDiv.attr("name");
 
-		pokemonFullTeamStatsArray.push(stats);
-		pokemonFullTeamNamesArray.push(name);
-	});
+  		pokemonFullTeamStatsArray.push(stats);
+  		pokemonFullTeamNamesArray.push(name);
+  	});
   } 
   // otherwise - values coming in from db, thus use passed in team object, and pull pokemon stats/names from it in for loop
 
@@ -415,10 +415,12 @@ function obtainTeamStats(inLeadersCanvasID, inAveragesCanvasID, fromDBboolean, t
 	  }
   } else { // if we are pulling in straight from DB
   	for (var a = 0; a < teamPokemon.length; a++){
-		//pokemonFullTeamStatsArray.push(teamPokemon[a].stats);
-		pokemonFullTeamNamesArray.push(teamPokemon[a].name);
+  		//pokemonFullTeamStatsArray.push(teamPokemon[a].stats);
+  		pokemonFullTeamNamesArray.push(teamPokemon[a].name);
 
-	    var natureAppliedStatsArray = applyNatureToStatArray(teamPokemon[a].nature, teamPokemon[a].stats); // apply (nature, stats)
+      var pokemonStatsDuplicateArray = Array.from(teamPokemon[a].stats);
+
+	    var natureAppliedStatsArray = applyNatureToStatArray(teamPokemon[a].nature, pokemonStatsDuplicateArray); // apply (nature, stats)
 
 	    var speedStat = natureAppliedStatsArray[5];
 	    var specialDefenseStat = natureAppliedStatsArray[4];
@@ -468,7 +470,7 @@ function obtainTeamStats(inLeadersCanvasID, inAveragesCanvasID, fromDBboolean, t
 	    averageSpecialDefense = averageSpecialDefense + specialDefenseStat;
 	    averageSpeed = averageSpeed + speedStat;
 
-	}
+	  }
   }
 
   // now create averages, either using 'alt' pokemons stats array or passed in stats from DB
