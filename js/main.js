@@ -36,7 +36,7 @@ async function makeCorsRequest(input, idAddToName) {
   var url = 'https://pokeapi.co/api/v2/pokemon/' + input + '/';
 
   var xhr = createCORSRequest('GET', url);
-  xhr.setRequestHeader('Access-Control-Allow-Origin', 'http://pokeapi.co/');
+  xhr.setRequestHeader('Access-Control-Allow-Origin', '*');
   xhr.setRequestHeader('Access-Control-Allow-Methods', 'GET');
   xhr.setRequestHeader('Access-Control-Allow-Headers', 'Origin, Content-Type, X-Auth-Token');
   
@@ -109,7 +109,10 @@ async function makeCorsRequest(input, idAddToName) {
 
     $("#" + pokemonHolderDivName).append(typesDiv);
 
+    // edit button to show we can add pokemon again
     document.getElementById("addpokemon-button").disabled = false;
+    $('#addpokemon-button').removeClass('add-pokemon-loading-spinner');
+
   };
 
   xhr.onerror = function() {
@@ -131,6 +134,7 @@ function getPokemon(idAddToName){
   }
 
   document.getElementById("addpokemon-button").disabled = true;
+  $('#addpokemon-button').toggleClass('add-pokemon-loading-spinner');
 
   // CLEARED FOR ERRORS: MR MIME (mr-mime) TYPE NULL (type-null), TAPUs, NIDORAN(male:female)
   // obtain response from CORS request

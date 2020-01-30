@@ -178,6 +178,34 @@ bottom: .5em;
   margin: 0px;
 }
 
+
+/* loading icon during 'Add pokemon' in case of long response time */
+.add-pokemon-loading-spinner {
+  background-color: #333;
+
+  -webkit-animation: sk-rotateplane 1.2s infinite ease-in-out;
+  animation: sk-rotateplane 1.2s infinite ease-in-out;
+}
+
+@-webkit-keyframes sk-rotateplane {
+  0% { -webkit-transform: perspective(120px) }
+  50% { -webkit-transform: perspective(120px) rotateY(180deg) }
+  100% { -webkit-transform: perspective(120px) rotateY(180deg)  rotateX(180deg) }
+}
+
+@keyframes sk-rotateplane {
+  0% { 
+    transform: perspective(120px) rotateX(0deg) rotateY(0deg);
+    -webkit-transform: perspective(120px) rotateX(0deg) rotateY(0deg) 
+  } 50% { 
+    transform: perspective(120px) rotateX(-180.1deg) rotateY(0deg);
+    -webkit-transform: perspective(120px) rotateX(-180.1deg) rotateY(0deg) 
+  } 100% { 
+    transform: perspective(120px) rotateX(-180deg) rotateY(-179.9deg);
+    -webkit-transform: perspective(120px) rotateX(-180deg) rotateY(-179.9deg);
+  }
+}
+
 /* remove button on row */
 .remove-row-button {
 
@@ -1103,7 +1131,7 @@ bottom: .5em;
   });
 
   $('#load-global-user-team-button').on('click', function() {
-    // turn this into a function that takes in this value, then loads the users into the table: #global-teams-table
+    // function that takes in user name, then loads the users into the table: #global-teams-table
     loadGlobalUserIntoTab($('#all-users-list-dropdown').val());
   });
 

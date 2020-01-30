@@ -202,9 +202,13 @@ function obtainTeamsFromDatabase(inputTable, optionalUsername){
       // create team stats and graphs
       var dbObtainedPokemon = getPokemonFromDB(thisRowTeam.pokemon);
 
-      // add canvas to chart
-      var teamStatsDiv = '<h4>Team Leaders: </h4><div class="leader-canvas-holder"><canvas class="" id="' + teamRandomGeneratedID + '-leaders-canvas"/></div>' +
-        '<h4>Team Averages: </h4><div class="average-canvas-holder"><canvas class="" id="' + teamRandomGeneratedID + '-averages-canvas"/></div>';
+      // add canvas to chart - note: if optional user is added, there is the possibility that his teams are loaded on the My Teams page. 
+      // Thus, alter the ID, because otherwise this will re-draw teams on the My Teams page instead of on normal page
+      var addOnID = "";
+      if (optionalUsername) addOnID = "-addon-graph";
+
+      var teamStatsDiv = '<h4>Team Leaders: </h4><div class="leader-canvas-holder"><canvas class="" id="' + teamRandomGeneratedID + addOnID + '-leaders-canvas"/></div>' +
+        '<h4>Team Averages: </h4><div class="average-canvas-holder"><canvas class="" id="' + teamRandomGeneratedID + addOnID + '-averages-canvas"/></div>';
 
       // the current row added will be the length of the rows in the table
       var rowCounter = t.rows().count(); 
@@ -221,7 +225,7 @@ function obtainTeamsFromDatabase(inputTable, optionalUsername){
         teamRandomGeneratedID,
         rowCounter);
 
-      obtainTeamStats(teamRandomGeneratedID + "-leaders-canvas", teamRandomGeneratedID + "-averages-canvas", true, thisRowTeam.pokemon);
+      obtainTeamStats(teamRandomGeneratedID + addOnID + "-leaders-canvas", teamRandomGeneratedID + addOnID + "-averages-canvas", true, thisRowTeam.pokemon);
 
       // clear current pokemon array (if needed)
       currentPokemonArray = [];
