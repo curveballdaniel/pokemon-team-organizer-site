@@ -36,6 +36,10 @@ function makeCorsRequest(input, idAddToName) {
   var url = 'http://pokeapi.co/api/v2/pokemon/' + input + '/';
 
   var xhr = createCORSRequest('GET', url);
+  xhr.setRequestHeader('Access-Control-Allow-Origin', '*');
+  xhr.setRequestHeader('Access-Control-Allow-Methods', 'GET');
+  xhr.setRequestHeader('Access-Control-Allow-Headers', 'Origin, Content-Type, X-Auth-Token');
+  
   if (!xhr) {
     alert('CORS not supported');
     return;
