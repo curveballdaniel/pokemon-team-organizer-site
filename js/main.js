@@ -31,12 +31,12 @@ function createCORSRequest(method, url) {
 }
 
 // Make the actual CORS request.
-function makeCorsRequest(input, idAddToName) {
+async function makeCorsRequest(input, idAddToName) {
   // This is a sample server that supports CORS.
-  var url = 'http://pokeapi.co/api/v2/pokemon/' + input + '/';
+  var url = 'https://pokeapi.co/api/v2/pokemon/' + input + '/';
 
   var xhr = createCORSRequest('GET', url);
-  xhr.setRequestHeader('Access-Control-Allow-Origin', '*');
+  xhr.setRequestHeader('Access-Control-Allow-Origin', 'http://pokeapi.co/');
   xhr.setRequestHeader('Access-Control-Allow-Methods', 'GET');
   xhr.setRequestHeader('Access-Control-Allow-Headers', 'Origin, Content-Type, X-Auth-Token');
   
