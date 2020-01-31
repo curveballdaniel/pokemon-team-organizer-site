@@ -118,8 +118,12 @@ function writeUserTeamsToDatabase(){
 
 function obtainTeamsFromDatabase(inputTable, optionalUsername){
   var username = thisUser.username;
+  var tempTeamHolder = [];
 
-  if (optionalUsername) username = optionalUsername;
+  if (optionalUsername){
+    username = optionalUsername;
+    tempTeamHolder = thisUser.teams; 
+  } 
 
   var userTeamsDB = firebase.database().ref('users/' + username + '/teams/');
 
@@ -236,9 +240,12 @@ function obtainTeamsFromDatabase(inputTable, optionalUsername){
 
   }).then(function() {
     // after finish, thisUser will be updated - but not until after .then is called
+    if (!optionalUsername) {
+      setCurrentlyLoggedInUser();
+    } else {
+      thisUser.teams = tempTeamHolder; // if loaded on global teams, reset user's teams to what they were, otherwise teams couldn't be saved over
+    }
     triggerLoadedAccountNotificationDiv();
-    if (!optionalUsername) setCurrentlyLoggedInUser();
-    //console.log(thisUser);
   });
 
 }
@@ -334,6 +341,7 @@ function setNewUserInDB(newUsername){
     if (error) {
       // The write failed...
     } else {
+
       writeUserTeamsToDatabase();
       // if no teams have been created and the user is new, won't traverse through DB for loop, thus set logged in user here
       setCurrentlyLoggedInUser();
@@ -397,7 +405,6 @@ function saveUnderUsername(){
     // once finished, if the username is not in use, create the username, and add team records to data
     if (usernameExist){
       writeUserTeamsToDatabase();
-
     } else {
       alert("You are not logged in! Either create an account or load your account to save teams.");
     }
@@ -406,9 +413,20 @@ function saveUnderUsername(){
 }
 
 function logOut(){
-  thisUser.username = "";
-  triggerLogOutNotificationDiv();
-  setCurrentlyLoggedInUser();
+  if (confirm("Are you sure you would like to log out?\nIf you did not save, your teams will be lost forever!") == true) {
+    // remove user's data
+    thisUser.username = "";
+    thisUser.teams = [];
+
+    // clear table
+    var t = $('#main-table').DataTable();
+    t.clear().draw();
+
+    triggerLogOutNotificationDiv();
+    setCurrentlyLoggedInUser();
+  } else {
+    return;
+  }
 }
 
 function currentLoggedInUsername(){
