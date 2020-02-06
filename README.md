@@ -11,6 +11,7 @@ Using:
 Javascript, JQuery, HTML, CSS, Node <br/>
 Pokesprite: https://github.com/msikma/pokesprite <br/>
 PokeApi: https://pokeapi.co/ <br/>
+Chart.js, datatables.js <br/>
 Bootstrap <br/>
 Firebase <br/>
 Google Cloud <br/>
