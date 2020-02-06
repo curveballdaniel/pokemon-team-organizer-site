@@ -8,11 +8,11 @@ This site is a simple Pokemon team storage online - create a simple, unique user
 
 Using: 
 
-Javascript, JQuery, HTML, CSS, Node
-Pokesprite: https://github.com/msikma/pokesprite
-PokeApi: https://pokeapi.co/
-Bootstrap
-Firebase
-Google Cloud
-Bulbapedia + others for trainer images
-Trainer card: https://pokecharms.com/works/hgss-trainer-cards.18030/
+Javascript, JQuery, HTML, CSS, Node <br/>
+Pokesprite: https://github.com/msikma/pokesprite <br/>
+PokeApi: https://pokeapi.co/ <br/>
+Bootstrap <br/>
+Firebase <br/>
+Google Cloud <br/>
+Bulbapedia + others for trainer images <br/>
+Trainer card: https://pokecharms.com/works/hgss-trainer-cards.18030/ 
